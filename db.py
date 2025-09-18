@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime, \
-    func
+    func, text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy import delete
 
@@ -17,10 +17,11 @@ class CryptoCoin(Base):
     price = Column(Float)
     trading_volume = Column(Float)
     market_cap = Column(Float)
-    date_added = Column(DateTime, server_default=func.now())
-
-
-Base.metadata.create_all(engine)
+    date_added = Column(
+        DateTime,
+        server_default=text("CURRENT_TIMESTAMP"),
+        nullable=False
+    )
 
 
 def write_to_db(data) -> int:
@@ -46,6 +47,8 @@ def clean_db():
         session.commit()
         print("Таблица очищена.")
 
+
+Base.metadata.create_all(engine)
 
 if __name__ == '__main__':
     clean_db()

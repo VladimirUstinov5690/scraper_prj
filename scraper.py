@@ -1,6 +1,6 @@
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
@@ -8,10 +8,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 url = 'https://www.coingecko.com/ru'
 
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
-
-def start_scraping():
+def start_scraping() -> list[tuple[str, str, float, float, float]]:
+    """Запускает скраппинг сайта криптовалют ->
+    tuple(name, symbol, price, trading_volume, market_cap)"""
+    opts = Options()
+    opts.page_load_strategy = "none"
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=opts)
     try:
         driver.get(url)
         # Ожидаем загрузку траницы
@@ -22,6 +25,7 @@ def start_scraping():
         
         row = driver.find_elements(By.CSS_SELECTOR, 'tbody tr')
         data_coins = []
+        
         # Получаем имя, символ, стоимость, объем торгов, капитализацию криптовалюты
         for el in row:
             name = el.find_element(By.CSS_SELECTOR, 'div.tw-font-semibold')
@@ -31,9 +35,11 @@ def start_scraping():
             spans = el.find_elements(By.CSS_SELECTOR, 'span[data-price-usd]')
             if len(spans) < 3:
                 continue
-            price = float(spans[0].get_attribute("data-price-usd"))
-            trading_volume = float(spans[1].get_attribute("data-price-usd"))
-            market_cap = float(spans[2].get_attribute("data-price-usd"))
+            price = round(float(spans[0].get_attribute("data-price-usd")), 2)
+            trading_volume = round(
+                float(spans[1].get_attribute("data-price-usd")), 2)
+            market_cap = round(float(spans[2].get_attribute("data-price-usd")),
+                               2)
             
             data_coins.append(
                 (name_crypto, symbol_crypto, price, trading_volume,

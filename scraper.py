@@ -21,11 +21,8 @@ def start_scraping():
         print('Страница загружена!')
         
         row = driver.find_elements(By.CSS_SELECTOR, 'tbody tr')
-        
         data_coins = []
-        
-        # Получаем имя и символ криптовалюты
-        
+        # Получаем имя, символ, стоимость, объем торгов, капитализацию криптовалюты
         for el in row:
             name = el.find_element(By.CSS_SELECTOR, 'div.tw-font-semibold')
             name_crypto = name.text.splitlines()[0].strip()
@@ -33,7 +30,6 @@ def start_scraping():
             
             spans = el.find_elements(By.CSS_SELECTOR, 'span[data-price-usd]')
             if len(spans) < 3:
-                # пропустим строки без полного набора чисел (реклама/декор)
                 continue
             price = float(spans[0].get_attribute("data-price-usd"))
             trading_volume = float(spans[1].get_attribute("data-price-usd"))

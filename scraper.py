@@ -12,6 +12,8 @@ driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
 
 
 def start_scraping():
+    """Запускает скраппинг сайта криптовалют ->
+    tuple(name, symbol, price, trading_volume, market_cap)"""
     try:
         driver.get(url)
         # Ожидаем загрузку траницы
@@ -35,9 +37,9 @@ def start_scraping():
             if len(spans) < 3:
                 # пропустим строки без полного набора чисел (реклама/декор)
                 continue
-            price = float(spans[0].get_attribute("data-price-usd"))
-            trading_volume = float(spans[1].get_attribute("data-price-usd"))
-            market_cap = float(spans[2].get_attribute("data-price-usd"))
+            price = round(float(spans[0].get_attribute("data-price-usd")), 2)
+            trading_volume = round(float(spans[1].get_attribute("data-price-usd")), 2)
+            market_cap = round(float(spans[2].get_attribute("data-price-usd")), 2)
             
             data_coins.append(
                 (name_crypto, symbol_crypto, price, trading_volume,

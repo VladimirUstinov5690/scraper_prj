@@ -1,3 +1,4 @@
+import os
 from openpyxl import Workbook
 from db import get_all_data
 
@@ -15,14 +16,15 @@ ws['E1'] = 'Объём торгов'
 ws['F1'] = 'Капитализация'
 ws['G1'] = 'Дата добавления информации'
 
+# Данные для сохранения файла
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+EXCEL_PATH = os.path.join(BASE_DIR, "cryptocurrency data.xlsx")
+
 
 def export_to_db():
     """Выполняет перенос данных из БД в Excel"""
     coins_data = get_all_data()
     for row in coins_data:
         ws.append(row)
-    wb.save('данные криптовалют.xlsx')
-
-
-if __name__ == '__main__':
-    export_to_db()
+    wb.save(EXCEL_PATH)
+    

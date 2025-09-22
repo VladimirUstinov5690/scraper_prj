@@ -1,10 +1,15 @@
+import os
 from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime, \
-    func, text
+    text
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy import delete
 
 Base = declarative_base()
-engine = create_engine('sqlite:///crypto.db')
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+DB_PATH = os.path.join(BASE_DIR, "crypto.db")
+engine = create_engine(f"sqlite:///{DB_PATH}")
 Session = sessionmaker(bind=engine)
 
 
@@ -24,8 +29,8 @@ class CryptoCoin(Base):
     )
 
 
-def write_to_db(data) -> int:
-    """Добавляет записи в БД"""
+def add_to_db(data) -> int:
+    """Добавляет записи в базу данных"""
     objects = [CryptoCoin(
         name_coin=name_crypto,
         symbol=symbol_crypto,
@@ -42,6 +47,7 @@ def write_to_db(data) -> int:
 
 
 def get_all_data():
+    """Получает все записи из базы данных"""
     with Session() as session:
         coins = session.query(CryptoCoin).all()
         for coin in coins:
@@ -50,6 +56,7 @@ def get_all_data():
 
 
 def clean_db():
+    """Очищает базу данных"""
     with Session() as session:
         session.execute(delete(CryptoCoin))
         session.commit()
@@ -58,5 +65,3 @@ def clean_db():
 
 Base.metadata.create_all(engine)
 
-if __name__ == '__main__':
-    clean_db()

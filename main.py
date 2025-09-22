@@ -18,5 +18,3 @@ if __name__ == '__main__':
         schedule.every(1).minutes.do(main)
         while not stop_scraping and schedule.get_jobs():
             schedule.run_pending()
-
-        

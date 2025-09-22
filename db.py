@@ -41,6 +41,14 @@ def write_to_db(data) -> int:
         return len(objects)
 
 
+def get_all_data():
+    with Session() as session:
+        coins = session.query(CryptoCoin).all()
+        for coin in coins:
+            yield (coin.id, coin.name_coin, coin.symbol, coin.price,
+                   coin.trading_volume, coin.market_cap, coin.date_added)
+
+
 def clean_db():
     with Session() as session:
         session.execute(delete(CryptoCoin))

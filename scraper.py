@@ -8,13 +8,21 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 url = 'https://www.coingecko.com/ru'
 
+stop_scraping = False
 
-def start_scraping() -> list[tuple[str, str, float, float, float]]:
+
+def start_scraping() -> list[tuple[str, str, float, float, float]] | None:
     """Запускает скраппинг сайта криптовалют ->
     tuple(name, symbol, price, trading_volume, market_cap)"""
+    global stop_scraping
+    if stop_scraping:
+        print('Сбор данных остановлен!')
+        return
+    
     opts = Options()
     opts.page_load_strategy = "none"
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=opts)
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()),
+                              options=opts)
     try:
         driver.get(url)
         # Ожидаем загрузку траницы
@@ -51,3 +59,9 @@ def start_scraping() -> list[tuple[str, str, float, float, float]]:
         print("ОШИБКА:", e)
     finally:
         driver.quit()
+
+
+def stop_scraper():
+    """Установливает флаг для остановки скраппера."""
+    global stop_scraping
+    stop_scraping = True

@@ -1,3 +1,4 @@
+import schedule
 from scraper import start_scraping
 from db import write_to_db
 
@@ -9,4 +10,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    schedule.every(1).minutes.do(main)
+    while True:
+        schedule.run_pending()
+    

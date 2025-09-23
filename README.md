@@ -14,7 +14,7 @@
 ## Установка
 
 ```bash
-git clone https://github.com/VladimirUstinov5690/cli_manager
+git clone https://github.com/VladimirUstinov5690/scraper_prj.git
 cd <папка_проекта>
 python -m venv venv
 source venv/bin/activate  # Linux/macOS

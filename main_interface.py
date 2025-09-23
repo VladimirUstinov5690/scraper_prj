@@ -98,7 +98,7 @@ def main():
     window.setWindowTitle("Скрапер")
     
     base_dir = os.path.dirname(os.path.abspath(__file__))
-    icon_path = os.path.join(base_dir, "gui", "icons", "icon.png")
+    icon_path = os.path.join(base_dir, "gui", "utils", "icon.png")
     if os.path.exists(icon_path):
         app.setWindowIcon(QIcon(icon_path))
         window.setWindowIcon(QIcon(icon_path))

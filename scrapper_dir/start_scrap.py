@@ -12,7 +12,7 @@ def main():
     return count_elements
 
 
-if __name__ == '__main__':
+def start_continuous_scraping():
     data = main()
     if isinstance(data, int) and not stop_scraping:
         schedule.every(1).minutes.do(main)

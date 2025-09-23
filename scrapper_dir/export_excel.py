@@ -1,6 +1,6 @@
 import os
 from openpyxl import Workbook
-from db import get_all_data
+from scrapper_dir.db import get_all_data
 
 # Создание файла и активного листа
 wb = Workbook()
@@ -21,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 EXCEL_PATH = os.path.join(BASE_DIR, "cryptocurrency data.xlsx")
 
 
-def export_to_db():
+def export_to_excel():
     """Выполняет перенос данных из БД в Excel"""
     coins_data = get_all_data()
     for row in coins_data:

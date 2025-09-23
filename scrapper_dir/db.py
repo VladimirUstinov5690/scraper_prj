@@ -1,4 +1,6 @@
 import os
+from datetime import datetime
+
 from sqlalchemy import create_engine, Column, Integer, Float, String, DateTime, \
     text
 from sqlalchemy.orm import declarative_base, sessionmaker
@@ -47,12 +49,22 @@ def add_to_db(data) -> int:
 
 
 def get_all_data():
-    """Получает все записи из базы данных"""
+    """Выдаёт все записи из базы данных"""
     with Session() as session:
         coins = session.query(CryptoCoin).all()
         for coin in coins:
             yield (coin.id, coin.name_coin, coin.symbol, coin.price,
                    coin.trading_volume, coin.market_cap, coin.date_added)
+
+
+def get_symbol_all(symbol: str) -> list[tuple[datetime, float]]:
+    """Выдаёт по символу (например, 'BTC')  -> [(date_added, price)]"""
+    with Session() as session:
+        rows = (
+            session.query(CryptoCoin.date_added, CryptoCoin.price)
+            .filter(CryptoCoin.symbol == symbol)
+            .order_by(CryptoCoin.date_added.asc()).all())
+    return [(r[0], r[1]) for r in rows]
 
 
 def clean_db():
@@ -64,4 +76,3 @@ def clean_db():
 
 
 Base.metadata.create_all(engine)
-
